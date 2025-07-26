@@ -9,6 +9,8 @@ namespace Jellyfin.Plugin.CustomTabs.Configuration
 
     public class TabConfig
     {
+        public string ContentJs { get; set; } = string.Empty;
+
         public string ContentHtml { get; set; } = string.Empty;
 
         public string Title { get; set; } = string.Empty;

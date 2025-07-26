@@ -47,6 +47,12 @@
                 </textarea>
                 <div class="fieldDescription">The html that should be displayed when this tab is shown.</div>
             </div>
+            <div class="inputContainer">
+                <label class="inputLabel inputLabelUnfocused" for="templateContentJs">Inline JavaScript</label>
+                <textarea style="display:block;" class="emby-textarea emby-input" id="templateContentJs" data-id="templateContentJs">
+                </textarea>
+                <div class="fieldDescription">JavaScript code that will run when the tab is shown.</div>
+            </div>
             <button data-id="templateRemoveTab" is="emby-button" type="button" class="emby-button raised block">
                 <span>Remove</span>
             </button>
@@ -67,17 +73,19 @@
                 saveConfig: function (e) {
                     e.preventDefault();
                     Dashboard.showLoadingMsg();
+
                     const config = {
                         Tabs: []
                     };
-                    
+
                     // loop over tab configs
                     document.querySelectorAll("[data-id=tab-config]").forEach(tabConfig => {
                         const tab = {
                             Title: tabConfig.querySelector("[data-id=txtDisplayText]").value,
                             ContentHtml: tabConfig.querySelector("[data-id=templateHtmlContent]").value,
+                            ContentJs: tabConfig.querySelector("[data-id=templateContentJs]").value // ✅ add this line
                         };
-                        
+
                         config.Tabs.push(tab);
                     });
 
@@ -116,19 +124,26 @@
                     });
                     CustomTabsConfig.loadConfig();
                 },
-                addCustomTabNew: function() {
+                addCustomTabNew: function () {
                     const template = CustomTabsConfig.templateCustomTab.cloneNode(true).content;
 
                     template.querySelector('[data-id=txtDisplayText]').value = 'New Tab';
                     template.querySelector('[data-id=templateHtmlContent]').value = '';
 
+                    // ✅ Set default JS content to empty string
+                    template.querySelector('[data-id=templateContentJs]').value = '';
+
                     const el = CustomTabsConfig.configurationWrapper.appendChild(template);
                 },
-                addCustomTabConfig: function(tabConfig) {
+
+                addCustomTabConfig: function (tabConfig) {
                     const template = CustomTabsConfig.templateCustomTab.cloneNode(true).content;
-                    //template.querySelector('[data-id=hiddenSectionId]').value = tabConfig.SectionId;
+
                     template.querySelector('[data-id=txtDisplayText]').value = tabConfig.Title;
                     template.querySelector('[data-id=templateHtmlContent]').value = tabConfig.ContentHtml;
+
+                    // ✅ Add this line to set the ContentJs value
+                    template.querySelector('[data-id=templateContentJs]').value = tabConfig.ContentJs || "";
 
                     const el = CustomTabsConfig.configurationWrapper.appendChild(template);
                 },
